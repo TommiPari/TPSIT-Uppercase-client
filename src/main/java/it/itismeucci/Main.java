@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws UnknownHostException, IOException {
@@ -16,10 +17,20 @@ public class Main {
         BufferedReader in = new BufferedReader(new InputStreamReader(s.getInputStream()));
         DataOutputStream out = new DataOutputStream(s.getOutputStream());
 
-        out.writeBytes("Ciao sono il client!\n");
-
-        String stringaRicevuta = in.readLine();
-        System.out.println("Stringa ricevuta: " + stringaRicevuta);
+        String stringaInviata;
+        String stringaRicevuta;
+        Scanner scanner = new Scanner(System.in);
+        do {
+            System.out.println("Inserire una stringa (0 per terminare la connessione):");
+            stringaInviata = scanner.nextLine();
+            out.writeBytes(stringaInviata + "\n");
+            if (stringaInviata.equals("0")) {
+                System.out.println("Comunicazione terminata!");
+            } else {
+                stringaRicevuta = in.readLine();
+                System.out.println("Stringa ricevuta: " + stringaRicevuta + "\n");
+            }
+        } while (!stringaInviata.equals("0"));
 
         s.close();
     }
